@@ -90,6 +90,10 @@ func trakt(user, apiKey string) (msg string, err error) {
 	}
 	defer res.Body.Close()
 
+	if res.StatusCode != 200 {
+		return fmt.Sprintf("User %s not found", user), nil
+	}
+
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return "", err
@@ -100,6 +104,10 @@ func trakt(user, apiKey string) (msg string, err error) {
 	err = json.Unmarshal(body, &j)
 	if err != nil {
 		return "", err
+	}
+
+	if len(*j) == 0 {
+		return fmt.Sprintf("%s has not watched anything", user), nil
 	}
 
 	out := fmt.Sprintf("%s last watched: %s", user, j.Latest())
