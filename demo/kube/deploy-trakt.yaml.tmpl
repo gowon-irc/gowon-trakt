@@ -1,0 +1,24 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trakt
+  labels:
+    app.kubernetes.io/name: trakt
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: trakt
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: trakt
+    spec:
+      containers:
+        - name: trakt
+          image: trakt
+          env:
+            - name: GOWON_BROKER
+              value: mosquitto:1883
+            - name: GOWON_TRAKT_API_KEY
+              value: apikey
