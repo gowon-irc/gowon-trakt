@@ -160,7 +160,7 @@ jobs:
           file: ./Dockerfile
           push: ${{ steps.prep.outputs.push }}
           tags: |
-            ghcr.io/${{ github.repository_owner }}/gowon-lastfm:latest
-            ghcr.io/${{ github.repository_owner }}/gowon-lastfm:${{ steps.prep.outputs.gitversionf }}
+            ghcr.io/${{ github.repository_owner }}/gowon-trakt:latest
+            ghcr.io/${{ github.repository_owner }}/gowon-trakt:${{ steps.prep.outputs.gitversionf }}
           cache-from: ${{ steps.prep.outputs.cache_from }}
           cache-to: ${{ steps.prep.outputs.cache_to }}
