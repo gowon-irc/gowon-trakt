@@ -22,3 +22,10 @@ spec:
               value: mosquitto:1883
             - name: GOWON_TRAKT_API_KEY
               value: apikey
+          volumeMounts:
+            - name: trakt
+              mountPath: /data
+      volumes:
+        - name: trakt
+          persistentVolumeClaim:
+            claimName: trakt
