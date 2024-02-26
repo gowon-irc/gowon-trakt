@@ -1,12 +1,16 @@
 ---
-apiVersion: skaffold/v2beta23
+apiVersion: skaffold/v2beta26
 kind: Config
 build:
   artifacts:
     - image: trakt
       context: ./..
-      docker:
-        dockerfile: Dockerfile
+      ko:
+        dependencies:
+          paths:
+            - "*.go"
+          ignore:
+            - "*_test.go"
 deploy:
   kubectl:
     manifests:

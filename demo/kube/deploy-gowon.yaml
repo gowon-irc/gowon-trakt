@@ -16,15 +16,23 @@ spec:
     spec:
       containers:
         - name: gowon
-          image: ghcr.io/gowon-irc/gowon:0.1.0-66
+          image: ghcr.io/gowon-irc/gowon:0.1.0-128
           env:
             - name: GOWON_SERVER
               value: oragono:6667
-            - name: GOWON_BROKER
-              value: mosquitto:1883
             - name: GOWON_NICK
               value: gowon
             - name: GOWON_USER
               value: gowon
             - name: GOWON_CHANNELS
               value: "#gowon"
+            - name: GOWON_CONFIG_DIR
+              value: /config
+          volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: trakt-config
