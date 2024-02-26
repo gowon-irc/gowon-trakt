@@ -7,7 +7,7 @@ require (
 	github.com/gowon-irc/go-gowon v0.0.0-20211017190628-9a3e88e0f3d4
 	github.com/jessevdk/go-flags v1.5.0
 	github.com/stretchr/testify v1.8.3
-	go.etcd.io/bbolt v1.3.6
+	go.etcd.io/bbolt v1.3.9
 )
 
 require (
