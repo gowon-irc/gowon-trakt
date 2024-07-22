@@ -3,7 +3,7 @@ COPY . /src
 WORKDIR /src
 RUN go build -o gowon-trakt
 
-FROM alpine:3.15.0
+FROM alpine:3.20.2
 RUN mkdir /data
 ENV GOWON_TRAKT_KV_PATH /data/kv.db
 WORKDIR /app
