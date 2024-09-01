@@ -5,14 +5,12 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 )
 
 const (
-	traktAPIURL = "https://api.trakt.tv/users/%s/history"
+	traktAPIHistoryURL  = "https://api.trakt.tv/users/%s/history"
+	traktAPIWatchingURL = "https://api.trakt.tv/users/%s/watching"
 )
-
-var apiKey = os.Getenv("IRC_TRAKT_API")
 
 type traktJSON []Entry
 
@@ -71,7 +69,8 @@ func (m Movie) String() string {
 }
 
 func trakt(user, apiKey string) (msg string, err error) {
-	url := fmt.Sprintf(traktAPIURL, user)
+	// Get user watching
+	url := fmt.Sprintf(traktAPIWatchingURL, user)
 
 	client := &http.Client{}
 
@@ -90,6 +89,42 @@ func trakt(user, apiKey string) (msg string, err error) {
 	}
 	defer res.Body.Close()
 
+	if res.StatusCode != 204 {
+		body, err := io.ReadAll(res.Body)
+		if err != nil {
+			return "", err
+		}
+
+		wj := &Entry{}
+
+		err = json.Unmarshal(body, &wj)
+		if err != nil {
+			return "", err
+		}
+
+		out := fmt.Sprintf("%s is watching: %s", user, wj.String())
+
+		return out, nil
+	}
+
+	// Get user history
+	url = fmt.Sprintf(traktAPIHistoryURL, user)
+
+	req, err = http.NewRequest("GET", url, nil)
+	if err != nil {
+		return "", err
+	}
+
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("trakt-api-version", "2")
+	req.Header.Add("trakt-api-key", apiKey)
+
+	res, err = client.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer res.Body.Close()
+
 	if res.StatusCode != 200 {
 		return fmt.Sprintf("User %s not found", user), nil
 	}
@@ -99,18 +134,18 @@ func trakt(user, apiKey string) (msg string, err error) {
 		return "", err
 	}
 
-	j := &traktJSON{}
+	hj := &traktJSON{}
 
-	err = json.Unmarshal(body, &j)
+	err = json.Unmarshal(body, &hj)
 	if err != nil {
 		return "", err
 	}
 
-	if len(*j) == 0 {
+	if len(*hj) == 0 {
 		return fmt.Sprintf("%s has not watched anything", user), nil
 	}
 
-	out := fmt.Sprintf("%s last watched: %s", user, j.Latest())
+	out := fmt.Sprintf("%s last watched: %s", user, hj.Latest())
 
 	return out, nil
 }
