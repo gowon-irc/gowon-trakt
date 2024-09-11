@@ -1,13 +1,15 @@
 module github.com/gowon-irc/gowon-trakt
 
-go 1.17
+go 1.22
+
+toolchain go1.23.1
 
 require (
 	github.com/gin-gonic/gin v1.9.1
 	github.com/gowon-irc/go-gowon v0.0.0-20211017190628-9a3e88e0f3d4
 	github.com/jessevdk/go-flags v1.5.0
 	github.com/stretchr/testify v1.8.3
-	go.etcd.io/bbolt v1.3.6
+	go.etcd.io/bbolt v1.3.11
 )
 
 require (
